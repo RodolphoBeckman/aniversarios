@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🎂 Aniversariantes</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rosa: #FF6B9D;
+    --roxo: #7C3AED;
+    --roxo-escuro: #5B21B6;
+    --verde-wpp: #25D366;
+    --verde-wpp-dark: #1DA851;
+    --bg: #F5F0FF;
+    --card: #FFFFFF;
+    --texto: #1E1B4B;
+    --sub: #6B7280;
+    --borda: #EDE9FE;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--texto);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--roxo-escuro) 0%, var(--roxo) 60%, var(--rosa) 100%);
+    padding: 20px 16px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(124,58,237,0.3);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .header-icon { font-size: 28px; }
+
+  .header-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: white;
+    letter-spacing: -0.5px;
+  }
+
+  .header-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* FILTROS */
+  .filtros {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  .filtros::-webkit-scrollbar { display: none; }
+
+  .filtro-btn {
+    white-space: nowrap;
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 2px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.15);
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    backdrop-filter: blur(4px);
+  }
+
+  .filtro-btn.ativo {
+    background: white;
+    color: var(--roxo);
+    border-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  }
+
+  /* MENSAGEM */
+  .mensagem-section {
+    margin: 16px 16px 0;
+  }
+
+  .mensagem-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--roxo);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .mensagem-textarea {
+    width: 100%;
+    border: 2px solid var(--borda);
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    color: var(--texto);
+    background: white;
+    resize: none;
+    outline: none;
+    min-height: 90px;
+    line-height: 1.5;
+    transition: border-color 0.2s;
+    box-shadow: 0 2px 8px rgba(124,58,237,0.06);
+  }
+
+  .mensagem-textarea:focus {
+    border-color: var(--roxo);
+  }
+
+  .mensagem-hint {
+    font-size: 11px;
+    color: var(--sub);
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* CONTADOR */
+  .contador-bar {
+    margin: 14px 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .contador-badge {
+    background: var(--roxo);
+    color: white;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+
+  .data-hoje {
+    font-size: 12px;
+    color: var(--sub);
+    font-weight: 600;
+  }
+
+  /* LISTA */
+  .lista {
+    padding: 12px 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* CARD */
+  .card {
+    background: white;
+    border-radius: 18px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 12px rgba(124,58,237,0.08);
+    border: 1.5px solid var(--borda);
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--roxo), var(--rosa));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 900;
+    color: white;
+    flex-shrink: 0;
+    letter-spacing: -1px;
+  }
+
+  .card-info { flex: 1; min-width: 0; }
+
+  .card-nome {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--texto);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-detalhes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 3px;
+  }
+
+  .card-data {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--roxo);
+    background: var(--borda);
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  .card-tel {
+    font-size: 12px;
+    color: var(--sub);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .wpp-btn {
+    background: var(--verde-wpp);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    box-shadow: 0 3px 10px rgba(37,211,102,0.35);
+    text-decoration: none;
+  }
+
+  .wpp-btn:active {
+    transform: scale(0.93);
+    background: var(--verde-wpp-dark);
+  }
+
+  /* EMPTY */
+  .empty {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--sub);
+  }
+
+  .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-title { font-size: 16px; font-weight: 800; color: var(--texto); margin-bottom: 6px; }
+  .empty-sub { font-size: 14px; }
+
+  /* TAG hoje */
+  .tag-hoje {
+    font-size: 10px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #FF6B9D, #FF8C42);
+    color: white;
+    padding: 2px 7px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .enviar-todos {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--verde-wpp);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 28px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(37,211,102,0.45);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    z-index: 200;
+  }
+
+  .enviar-todos:active { transform: translateX(-50%) scale(0.96); }
+  .enviar-todos.hidden { display: none; }
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <span class="header-icon">🎂</span>
+    <div>
+      <div class="header-title">Aniversariantes</div>
+      <div class="header-sub">Disparo via WhatsApp</div>
+    </div>
+  </div>
+
+  <div class="filtros">
+    <button class="filtro-btn ativo" onclick="setFiltro('hoje')">🎉 Hoje</button>
+    <button class="filtro-btn" onclick="setFiltro('amanha')">📅 Amanhã</button>
+    <button class="filtro-btn" onclick="setFiltro('2dias')">⏳ Em 2 dias</button>
+    <button class="filtro-btn" onclick="setFiltro('mes')">📆 Mês todo</button>
+  </div>
+</div>
+
+<div class="mensagem-section">
+  <div class="mensagem-label">✏️ Mensagem padrão</div>
+  <textarea class="mensagem-textarea" id="mensagemInput" rows="3">🎂 Feliz Aniversário, {nome}! Que seu dia seja repleto de alegria e realizações. Você é muito especial para nós! 🎉</textarea>
+  <div class="mensagem-hint">💡 Use <strong>{nome}</strong> — será substituído pelo nome de cada cliente</div>
+</div>
+
+<div class="contador-bar">
+  <span class="contador-badge" id="contadorBadge">0 clientes</span>
+  <span class="data-hoje" id="dataHoje"></span>
+</div>
+
+<div class="lista" id="lista"></div>
+
+<button class="enviar-todos hidden" id="btnEnviarTodos" onclick="enviarTodos()">
+  📲 Abrir todos no WhatsApp
+</button>
+
+<script>
+const CLIENTES = [{"nome": "Laura", "dia": 7, "mes": 3, "telefone": "62998547700"}, {"nome": "Adeliana", "dia": 23, "mes": 3, "telefone": "64999881884"}, {"nome": "Adriana", "dia": 24, "mes": 3, "telefone": "62981559413"}, {"nome": "Adriana", "dia": 21, "mes": 3, "telefone": "35988108219"}, {"nome": "Adriana", "dia": 11, "mes": 3, "telefone": "61991624300"}, {"nome": "Adriana", "dia": 30, "mes": 3, "telefone": "63999384425"}, {"nome": "Adriana", "dia": 25, "mes": 3, "telefone": "64984038122"}, {"nome": "Adriana", "dia": 18, "mes": 3, "telefone": "62991526070"}, {"nome": "Adriane", "dia": 21, "mes": 3, "telefone": "62981023880"}, {"nome": "Advalci", "dia": 14, "mes": 3, "telefone": "62992221996"}, {"nome": "Agnes", "dia": 2, "mes": 3, "telefone": "62981996828"}, {"nome": "Alba", "dia": 23, "mes": 3, "telefone": "62996797664"}, {"nome": "Alcione", "dia": 2, "mes": 3, "telefone": "62996870056"}, {"nome": "Alessandra", "dia": 23, "mes": 3, "telefone": "62999764506"}, {"nome": "Alessandra", "dia": 7, "mes": 3, "telefone": "62991768453"}, {"nome": "Alessandra", "dia": 12, "mes": 3, "telefone": "62981550611"}, {"nome": "Alessandra", "dia": 18, "mes": 3, "telefone": "62984137193"}, {"nome": "Alessandra", "dia": 25, "mes": 3, "telefone": "62992128393"}, {"nome": "Alessandra", "dia": 17, "mes": 3, "telefone": "62981387454"}, {"nome": "Alessandra", "dia": 19, "mes": 3, "telefone": "62999769995"}, {"nome": "Alexandra", "dia": 2, "mes": 3, "telefone": "62984022856"}, {"nome": "Alexandra", "dia": 31, "mes": 3, "telefone": "11981337606"}, {"nome": "Alexandra", "dia": 28, "mes": 3, "telefone": "62982588281"}, {"nome": "Aliane", "dia": 5, "mes": 3, "telefone": "61984399019"}, {"nome": "Alice", "dia": 5, "mes": 3, "telefone": "62982211112"}, {"nome": "Alice", "dia": 19, "mes": 3, "telefone": "62996436249"}, {"nome": "Aline", "dia": 23, "mes": 3, "telefone": "62981704411"}, {"nome": "Aline", "dia": 25, "mes": 3, "telefone": "62985704555"}, {"nome": "Aline", "dia": 19, "mes": 3, "telefone": "62996073587"}, {"nome": "Aline", "dia": 9, "mes": 3, "telefone": "62998683237"}, {"nome": "Aline", "dia": 30, "mes": 3, "telefone": "62983135558"}, {"nome": "Almerinda", "dia": 9, "mes": 3, "telefone": "66984195652"}, {"nome": "Alvania", "dia": 8, "mes": 3, "telefone": "62996520816"}, {"nome": "Amanda", "dia": 11, "mes": 3, "telefone": "61992826164"}, {"nome": "Amanda", "dia": 24, "mes": 3, "telefone": "62999541372"}, {"nome": "Amanda", "dia": 15, "mes": 3, "telefone": "62998044976"}, {"nome": "Amanda", "dia": 31, "mes": 3, "telefone": "62991556777"}, {"nome": "Ana", "dia": 27, "mes": 3, "telefone": "61985034946"}, {"nome": "Ana", "dia": 30, "mes": 3, "telefone": "62984520644"}, {"nome": "Ana", "dia": 15, "mes": 3, "telefone": "63984376666"}, {"nome": "Ana Carla", "dia": 28, "mes": 3, "telefone": "62991135966"}, {"nome": "Ana Carolina", "dia": 27, "mes": 3, "telefone": "62981083001"}, {"nome": "Ana Carolina", "dia": 31, "mes": 3, "telefone": "62998136638"}, {"nome": "Ana Carolina", "dia": 19, "mes": 3, "telefone": "62999281753"}, {"nome": "Ana Carolina", "dia": 4, "mes": 3, "telefone": "62991125559"}, {"nome": "Ana Carolina", "dia": 4, "mes": 3, "telefone": "62981636616"}, {"nome": "Ana Cintia", "dia": 9, "mes": 3, "telefone": "62984426320"}, {"nome": "Ana Clara", "dia": 1, "mes": 3, "telefone": "62992347694"}, {"nome": "Ana Clara", "dia": 17, "mes": 3, "telefone": "62999714346"}, {"nome": "Ana Clara", "dia": 11, "mes": 3, "telefone": "62981362881"}, {"nome": "Ana Clara", "dia": 16, "mes": 3, "telefone": "62984762964"}, {"nome": "Ana Claudia", "dia": 19, "mes": 3, "telefone": "62999522264"}, {"nome": "Ana Claudia", "dia": 23, "mes": 3, "telefone": "62981749000"}, {"nome": "Ana Claudia", "dia": 8, "mes": 3, "telefone": "62985077606"}, {"nome": "Ana Claudia", "dia": 22, "mes": 3, "telefone": "62999646061"}, {"nome": "Ana Cristina", "dia": 17, "mes": 3, "telefone": "62994099067"}, {"nome": "Ana Cristina", "dia": 20, "mes": 3, "telefone": "62984228487"}, {"nome": "Ana Cristina", "dia": 5, "mes": 3, "telefone": "62996979576"}, {"nome": "Ana Eliza", "dia": 27, "mes": 3, "telefone": "62984023054"}, {"nome": "Ana Flavia", "dia": 19, "mes": 3, "telefone": "62985652244"}, {"nome": "Ana Flavia", "dia": 7, "mes": 3, "telefone": "62985341663"}, {"nome": "Ana Flavia", "dia": 12, "mes": 3, "telefone": "62981568158"}, {"nome": "Ana Flavia", "dia": 12, "mes": 3, "telefone": "62999129454"}, {"nome": "Ana Flavia", "dia": 26, "mes": 3, "telefone": "64981415118"}, {"nome": "Ana Jorgina", "dia": 26, "mes": 3, "telefone": "62992720535"}, {"nome": "Ana Julia", "dia": 20, "mes": 3, "telefone": "62992228328"}, {"nome": "Ana Julia", "dia": 3, "mes": 3, "telefone": "63984933103"}, {"nome": "Ana Julia", "dia": 7, "mes": 3, "telefone": "62996410703"}, {"nome": "Ana Lidia", "dia": 16, "mes": 3, "telefone": "62999669798"}, {"nome": "Ana Lucia", "dia": 29, "mes": 3, "telefone": "62996919273"}, {"nome": "Ana Lucia", "dia": 17, "mes": 3, "telefone": "62984815555"}, {"nome": "Ana Lucia", "dia": 20, "mes": 3, "telefone": "62998660394"}, {"nome": "Ana Luisa", "dia": 9, "mes": 3, "telefone": "62991295529"}, {"nome": "Ana Luisa", "dia": 6, "mes": 3, "telefone": "62984647507"}, {"nome": "Ana Luiza", "dia": 29, "mes": 3, "telefone": "62992419988"}, {"nome": "Ana Luiza", "dia": 21, "mes": 3, "telefone": "62996372897"}, {"nome": "Ana Luiza", "dia": 4, "mes": 3, "telefone": "62996253459"}, {"nome": "Ana Luiza", "dia": 26, "mes": 3, "telefone": "62981533923"}, {"nome": "Ana Maria", "dia": 25, "mes": 3, "telefone": "62992923741"}, {"nome": "Ana Maria", "dia": 1, "mes": 3, "telefone": "62981742820"}, {"nome": "Ana Paula", "dia": 29, "mes": 3, "telefone": "62981349954"}, {"nome": "Ana Paula", "dia": 8, "mes": 3, "telefone": "62981814839"}, {"nome": "Ana Paula", "dia": 23, "mes": 3, "telefone": "66999882022"}, {"nome": "Ana Paula", "dia": 18, "mes": 3, "telefone": "62998030712"}, {"nome": "Ana Rodrigues", "dia": 23, "mes": 3, "telefone": "61981252106"}, {"nome": "Ana Teles", "dia": 25, "mes": 3, "telefone": "62981896433"}, {"nome": "Anatilde", "dia": 23, "mes": 3, "telefone": "62981130475"}, {"nome": "Andrea", "dia": 5, "mes": 3, "telefone": "62981772051"}, {"nome": "Andrea", "dia": 30, "mes": 3, "telefone": "62985858716"}, {"nome": "Andrea", "dia": 18, "mes": 3, "telefone": "62981421803"}, {"nome": "Andrea", "dia": 24, "mes": 3, "telefone": "62991266465"}, {"nome": "Andrea", "dia": 26, "mes": 3, "telefone": "62985255151"}, {"nome": "Andrea", "dia": 2, "mes": 3, "telefone": "62984027540"}, {"nome": "Andreia", "dia": 13, "mes": 3, "telefone": "62984488370"}, {"nome": "Andreia", "dia": 18, "mes": 3, "telefone": "62999868126"}, {"nome": "Andressa", "dia": 8, "mes": 3, "telefone": "62981195553"}, {"nome": "Andrizza", "dia": 21, "mes": 3, "telefone": "94991475225"}, {"nome": "Anelise", "dia": 13, "mes": 3, "telefone": "62999784941"}, {"nome": "Anete", "dia": 15, "mes": 3, "telefone": "62999955555"}, {"nome": "Angela", "dia": 10, "mes": 3, "telefone": "62981324477"}, {"nome": "Angela", "dia": 5, "mes": 3, "telefone": "62999416168"}, {"nome": "Angela", "dia": 20, "mes": 3, "telefone": "62992358520"}, {"nome": "Angela", "dia": 16, "mes": 3, "telefone": "62999726319"}, {"nome": "Anizia", "dia": 28, "mes": 3, "telefone": "62996871366"}, {"nome": "Anledi", "dia": 15, "mes": 3, "telefone": "62999200518"}, {"nome": "Anna Paula", "dia": 22, "mes": 3, "telefone": "62981421471"}, {"nome": "Antonela", "dia": 17, "mes": 3, "telefone": "21984732112"}, {"nome": "Antonia", "dia": 4, "mes": 3, "telefone": "62981309687"}, {"nome": "Aparecida", "dia": 30, "mes": 3, "telefone": "62992745203"}, {"nome": "Aracele", "dia": 7, "mes": 3, "telefone": "62999874422"}, {"nome": "Arianne", "dia": 27, "mes": 3, "telefone": "62982025000"}, {"nome": "Arlete", "dia": 28, "mes": 3, "telefone": "77999717410"}, {"nome": "Aurelia", "dia": 20, "mes": 3, "telefone": "62985482169"}, {"nome": "Barbara", "dia": 8, "mes": 3, "telefone": "62991727751"}, {"nome": "Beatriz", "dia": 14, "mes": 3, "telefone": "62984067710"}, {"nome": "Beatriz", "dia": 12, "mes": 3, "telefone": "62991132422"}, {"nome": "Berleidy", "dia": 20, "mes": 3, "telefone": "62984011858"}, {"nome": "Bernardete", "dia": 5, "mes": 3, "telefone": "62999323125"}, {"nome": "Bianca", "dia": 29, "mes": 3, "telefone": "62991471924"}, {"nome": "Bianca", "dia": 7, "mes": 3, "telefone": "62996048910"}, {"nome": "Brisa", "dia": 20, "mes": 3, "telefone": "62999675719"}, {"nome": "Bruna", "dia": 22, "mes": 3, "telefone": "62999081082"}, {"nome": "Bruna", "dia": 11, "mes": 3, "telefone": "62999767590"}, {"nome": "Bruna", "dia": 15, "mes": 3, "telefone": "62981031596"}, {"nome": "Bruna", "dia": 21, "mes": 3, "telefone": "62982961900"}, {"nome": "Bruna", "dia": 29, "mes": 3, "telefone": "62984130813"}, {"nome": "Bruna", "dia": 20, "mes": 3, "telefone": "62991266300"}, {"nome": "Bruna", "dia": 26, "mes": 3, "telefone": "62996777833"}, {"nome": "Bruna", "dia": 2, "mes": 3, "telefone": "62981004598"}, {"nome": "Bruna", "dia": 19, "mes": 3, "telefone": "62983320165"}, {"nome": "Bruna", "dia": 28, "mes": 3, "telefone": "62994551533"}, {"nome": "Brunna", "dia": 27, "mes": 3, "telefone": "62981978580"}, {"nome": "Brunna", "dia": 7, "mes": 3, "telefone": "62999720113"}, {"nome": "Camila", "dia": 28, "mes": 3, "telefone": "62984279425"}, {"nome": "Camila", "dia": 29, "mes": 3, "telefone": "62999346869"}, {"nome": "Camila", "dia": 3, "mes": 3, "telefone": "62999729933"}, {"nome": "Camila", "dia": 16, "mes": 3, "telefone": "62999794467"}, {"nome": "Camila", "dia": 16, "mes": 3, "telefone": "62985645265"}, {"nome": "Camila", "dia": 14, "mes": 3, "telefone": "62999123133"}, {"nome": "Camila", "dia": 21, "mes": 3, "telefone": "64999638802"}, {"nome": "Camila", "dia": 8, "mes": 3, "telefone": "62998021584"}, {"nome": "Camila", "dia": 7, "mes": 3, "telefone": "61985351999"}, {"nome": "Camilla", "dia": 26, "mes": 3, "telefone": "62982961832"}, {"nome": "Camilla", "dia": 29, "mes": 3, "telefone": "62982604400"}, {"nome": "Camilla", "dia": 26, "mes": 3, "telefone": "62999116461"}, {"nome": "Carina", "dia": 16, "mes": 3, "telefone": "62991822415"}, {"nome": "Carina", "dia": 26, "mes": 3, "telefone": "62981792910"}, {"nome": "Carla", "dia": 20, "mes": 3, "telefone": "62983091895"}, {"nome": "Carla", "dia": 13, "mes": 3, "telefone": "62985999494"}, {"nome": "Carmem", "dia": 18, "mes": 3, "telefone": "62982263922"}, {"nome": "Carmem", "dia": 3, "mes": 3, "telefone": "62984366899"}, {"nome": "Carmen", "dia": 6, "mes": 3, "telefone": "62984037271"}, {"nome": "Carolina", "dia": 26, "mes": 3, "telefone": "62984082844"}, {"nome": "Carolina", "dia": 12, "mes": 3, "telefone": "62993271661"}, {"nome": "Carolina", "dia": 12, "mes": 3, "telefone": "62983037000"}, {"nome": "Carolina", "dia": 25, "mes": 3, "telefone": "62984179416"}, {"nome": "Carolina", "dia": 21, "mes": 3, "telefone": "62981717110"}, {"nome": "Carolina", "dia": 22, "mes": 3, "telefone": "62996370777"}, {"nome": "Carolina", "dia": 4, "mes": 3, "telefone": "62996792458"}, {"nome": "Carolina", "dia": 7, "mes": 3, "telefone": "62981165135"}, {"nome": "Carolina", "dia": 10, "mes": 3, "telefone": "62992771191"}, {"nome": "Carolina", "dia": 19, "mes": 3, "telefone": "62996271998"}, {"nome": "Caroline", "dia": 12, "mes": 3, "telefone": "62984652575"}, {"nome": "Carolinne", "dia": 2, "mes": 3, "telefone": "62981730874"}, {"nome": "Casia", "dia": 21, "mes": 3, "telefone": "64993359661"}, {"nome": "Catiane", "dia": 23, "mes": 3, "telefone": "62996148088"}, {"nome": "Cejane", "dia": 18, "mes": 3, "telefone": "62991151659"}, {"nome": "Celia", "dia": 13, "mes": 3, "telefone": "11911857698"}, {"nome": "Celia", "dia": 16, "mes": 3, "telefone": "62981187179"}, {"nome": "Celia", "dia": 7, "mes": 3, "telefone": "62999793920"}, {"nome": "Celia", "dia": 4, "mes": 3, "telefone": "62996347355"}, {"nome": "Celia", "dia": 28, "mes": 3, "telefone": "61993356744"}, {"nome": "Cenen", "dia": 14, "mes": 3, "telefone": "62996270610"}, {"nome": "Ceumara", "dia": 23, "mes": 3, "telefone": "62986221011"}, {"nome": "Christiane", "dia": 28, "mes": 3, "telefone": "62981439397"}, {"nome": "Christiane", "dia": 14, "mes": 3, "telefone": "62994882241"}, {"nome": "Christine", "dia": 18, "mes": 3, "telefone": "62992941494"}, {"nome": "Cibele", "dia": 6, "mes": 3, "telefone": "62993960606"}, {"nome": "Cinara", "dia": 24, "mes": 3, "telefone": "62992489226"}, {"nome": "Cindy", "dia": 16, "mes": 3, "telefone": "62999991773"}, {"nome": "Cintha", "dia": 19, "mes": 3, "telefone": "62999472296"}, {"nome": "Cintia", "dia": 16, "mes": 3, "telefone": "62981464160"}, {"nome": "Cintia", "dia": 9, "mes": 3, "telefone": "62981115822"}, {"nome": "Cintia", "dia": 21, "mes": 3, "telefone": "62992516374"}, {"nome": "Cintia", "dia": 30, "mes": 3, "telefone": "62992939394"}, {"nome": "Ciriaca", "dia": 15, "mes": 3, "telefone": "62991486453"}, {"nome": "Clarisse", "dia": 12, "mes": 3, "telefone": "62981391313"}, {"nome": "Claudia", "dia": 2, "mes": 3, "telefone": "62992274989"}, {"nome": "Claudia", "dia": 20, "mes": 3, "telefone": "62981924313"}, {"nome": "Claudia", "dia": 17, "mes": 3, "telefone": "64984558493"}, {"nome": "Claudia", "dia": 19, "mes": 3, "telefone": "62984210470"}, {"nome": "Claudia", "dia": 24, "mes": 3, "telefone": "62981890123"}, {"nome": "Claudia", "dia": 11, "mes": 3, "telefone": "63999997511"}, {"nome": "Cleide", "dia": 1, "mes": 3, "telefone": "62982012124"}, {"nome": "Cleiton", "dia": 23, "mes": 3, "telefone": "62985750707"}, {"nome": "Clelia", "dia": 20, "mes": 3, "telefone": "64996471386"}, {"nome": "Cleusair", "dia": 22, "mes": 3, "telefone": "64996060891"}, {"nome": "Cristiana", "dia": 18, "mes": 3, "telefone": "62994024080"}, {"nome": "Cristiane", "dia": 1, "mes": 3, "telefone": "62996142144"}, {"nome": "Cristiane", "dia": 21, "mes": 3, "telefone": "62998483942"}, {"nome": "Cristiane", "dia": 14, "mes": 3, "telefone": "62999224837"}, {"nome": "Cristiane", "dia": 2, "mes": 3, "telefone": "62996888891"}, {"nome": "Cristina", "dia": 3, "mes": 3, "telefone": "62996318358"}, {"nome": "Cristina", "dia": 15, "mes": 3, "telefone": "62981419071"}, {"nome": "Cynara", "dia": 22, "mes": 3, "telefone": "62985666903"}, {"nome": "Cynthia", "dia": 30, "mes": 3, "telefone": "62999780702"}, {"nome": "Cynthia", "dia": 3, "mes": 3, "telefone": "64984442029"}, {"nome": "Daianna", "dia": 24, "mes": 3, "telefone": "62999680630"}, {"nome": "Dalila", "dia": 5, "mes": 3, "telefone": "62982057484"}, {"nome": "Dallenia", "dia": 1, "mes": 3, "telefone": "62982078098"}, {"nome": "Dalvita", "dia": 26, "mes": 3, "telefone": "62999162922"}, {"nome": "Daniela", "dia": 2, "mes": 3, "telefone": "69981147550"}, {"nome": "Daniela", "dia": 11, "mes": 3, "telefone": "62982223283"}, {"nome": "Daniela", "dia": 16, "mes": 3, "telefone": "62999022335"}, {"nome": "Daniela", "dia": 30, "mes": 3, "telefone": "62992687911"}, {"nome": "Daniela", "dia": 21, "mes": 3, "telefone": "62995263214"}, {"nome": "Daniella", "dia": 30, "mes": 3, "telefone": "62981810757"}, {"nome": "Danielle", "dia": 26, "mes": 3, "telefone": "62991268104"}, {"nome": "Danielle", "dia": 16, "mes": 3, "telefone": "64999475994"}, {"nome": "Danielle", "dia": 1, "mes": 3, "telefone": "62986054780"}, {"nome": "Danielle", "dia": 24, "mes": 3, "telefone": "62981780969"}, {"nome": "Danielle", "dia": 28, "mes": 3, "telefone": "62983041000"}, {"nome": "Danielle", "dia": 1, "mes": 3, "telefone": "62981465139"}, {"nome": "Danila", "dia": 5, "mes": 3, "telefone": "64999821831"}, {"nome": "Danne", "dia": 19, "mes": 3, "telefone": "62981184854"}, {"nome": "Darleny", "dia": 31, "mes": 3, "telefone": "61982220662"}, {"nome": "Dayane", "dia": 23, "mes": 3, "telefone": "34991057557"}, {"nome": "Dayane", "dia": 23, "mes": 3, "telefone": "64992147381"}, {"nome": "Dayanne", "dia": 11, "mes": 3, "telefone": "62991010057"}, {"nome": "Debora", "dia": 8, "mes": 3, "telefone": "62984660923"}, {"nome": "Debora", "dia": 18, "mes": 3, "telefone": "62985532093"}, {"nome": "Debora", "dia": 25, "mes": 3, "telefone": "62999592241"}, {"nome": "Deborah", "dia": 3, "mes": 3, "telefone": "62991971497"}, {"nome": "Deise", "dia": 4, "mes": 3, "telefone": "62999728665"}, {"nome": "Delermond", "dia": 4, "mes": 3, "telefone": "62992418119"}, {"nome": "Delma", "dia": 25, "mes": 3, "telefone": "62999656553"}, {"nome": "Denise", "dia": 5, "mes": 3, "telefone": "62999804854"}, {"nome": "Denise", "dia": 8, "mes": 3, "telefone": "62982112281"}, {"nome": "Denise", "dia": 16, "mes": 3, "telefone": "61981517760"}, {"nome": "Denyse", "dia": 30, "mes": 3, "telefone": "62992522285"}, {"nome": "Deyleni", "dia": 31, "mes": 3, "telefone": "62984629464"}, {"nome": "Dinamar", "dia": 28, "mes": 3, "telefone": "62982389169"}, {"nome": "Dinamara", "dia": 15, "mes": 3, "telefone": "62992262454"}, {"nome": "Diva", "dia": 3, "mes": 3, "telefone": "62999955543"}, {"nome": "Divinair", "dia": 26, "mes": 3, "telefone": "62996889785"}, {"nome": "Dora", "dia": 14, "mes": 3, "telefone": "62999754888"}, {"nome": "Dora", "dia": 28, "mes": 3, "telefone": "61999653444"}, {"nome": "Dorama", "dia": 26, "mes": 3, "telefone": "62984328094"}, {"nome": "Edilamar", "dia": 5, "mes": 3, "telefone": "62985880006"}, {"nome": "Edjani", "dia": 11, "mes": 3, "telefone": "62999045671"}, {"nome": "Edlaine", "dia": 12, "mes": 3, "telefone": "64992362767"}, {"nome": "Eduarda", "dia": 24, "mes": 3, "telefone": "62982443142"}, {"nome": "Elaine", "dia": 28, "mes": 3, "telefone": "62981776444"}, {"nome": "Elany", "dia": 5, "mes": 3, "telefone": "62999793668"}, {"nome": "Eleuza", "dia": 15, "mes": 3, "telefone": "62999653804"}, {"nome": "Elga", "dia": 18, "mes": 3, "telefone": "62983302727"}, {"nome": "Elia", "dia": 17, "mes": 3, "telefone": "62991185182"}, {"nome": "Eliana", "dia": 11, "mes": 3, "telefone": "62996718122"}, {"nome": "Eliana", "dia": 7, "mes": 3, "telefone": "62992299767"}, {"nome": "Eliane", "dia": 24, "mes": 3, "telefone": "62996072948"}, {"nome": "Eliane", "dia": 22, "mes": 3, "telefone": "62992111768"}, {"nome": "Eliane", "dia": 16, "mes": 3, "telefone": "62992999286"}, {"nome": "Elice", "dia": 3, "mes": 3, "telefone": "62985496553"}, {"nome": "Eliene", "dia": 13, "mes": 3, "telefone": "62982059722"}, {"nome": "Elineide", "dia": 4, "mes": 3, "telefone": "62981377006"}, {"nome": "Elisabete", "dia": 14, "mes": 3, "telefone": "62981916900"}, {"nome": "Elisabeth", "dia": 1, "mes": 3, "telefone": "62981331155"}, {"nome": "Elisangela", "dia": 13, "mes": 3, "telefone": "62984738658"}, {"nome": "Elizabeth", "dia": 14, "mes": 3, "telefone": "62984720534"}, {"nome": "Ellen", "dia": 13, "mes": 3, "telefone": "62992238020"}, {"nome": "Eloina", "dia": 4, "mes": 3, "telefone": "62984002602"}, {"nome": "Ema", "dia": 28, "mes": 3, "telefone": "62999662857"}, {"nome": "Emily", "dia": 31, "mes": 3, "telefone": "62996867679"}, {"nome": "Erica", "dia": 29, "mes": 3, "telefone": "62982498983"}, {"nome": "Erika", "dia": 9, "mes": 3, "telefone": "62991052362"}, {"nome": "Erika", "dia": 21, "mes": 3, "telefone": "62981159275"}, {"nome": "Erika", "dia": 26, "mes": 3, "telefone": "62992992264"}, {"nome": "Estela", "dia": 19, "mes": 3, "telefone": "62981500200"}, {"nome": "Estelia", "dia": 11, "mes": 3, "telefone": "62991776764"}, {"nome": "Eunice", "dia": 6, "mes": 3, "telefone": "62999781312"}, {"nome": "Eunice", "dia": 20, "mes": 3, "telefone": "62981914115"}, {"nome": "Evanizia", "dia": 18, "mes": 3, "telefone": "62992619977"}, {"nome": "Fabiana", "dia": 14, "mes": 3, "telefone": "62981548122"}, {"nome": "Fabiana", "dia": 11, "mes": 3, "telefone": "62982594766"}, {"nome": "Fabiana", "dia": 19, "mes": 3, "telefone": "62984968411"}, {"nome": "Fabiana", "dia": 1, "mes": 3, "telefone": "62999210874"}, {"nome": "Fabiana", "dia": 4, "mes": 3, "telefone": "62992925596"}, {"nome": "Fabiane", "dia": 29, "mes": 3, "telefone": "64999898989"}, {"nome": "Fabiane", "dia": 10, "mes": 3, "telefone": "62984035354"}, {"nome": "Fabiane", "dia": 10, "mes": 3, "telefone": "62983412121"}, {"nome": "Fabianne", "dia": 6, "mes": 3, "telefone": "62999304777"}, {"nome": "Fabiola", "dia": 5, "mes": 3, "telefone": "62996870071"}, {"nome": "Fabricia", "dia": 19, "mes": 3, "telefone": "62982194298"}, {"nome": "Fatima", "dia": 29, "mes": 3, "telefone": "62999752895"}, {"nome": "Fernanda", "dia": 20, "mes": 3, "telefone": "62996884090"}, {"nome": "Fernanda", "dia": 22, "mes": 3, "telefone": "62999308357"}, {"nome": "Fernanda", "dia": 15, "mes": 3, "telefone": "62996945936"}, {"nome": "Fernanda", "dia": 13, "mes": 3, "telefone": "62982285013"}, {"nome": "Fernanda", "dia": 22, "mes": 3, "telefone": "64992060700"}, {"nome": "Fernanda", "dia": 3, "mes": 3, "telefone": "62981167956"}, {"nome": "Fernanda", "dia": 8, "mes": 3, "telefone": "62999733481"}, {"nome": "Fernanda", "dia": 1, "mes": 3, "telefone": "62981284100"}, {"nome": "Fernanda", "dia": 25, "mes": 3, "telefone": "62996952503"}, {"nome": "Fernanda", "dia": 30, "mes": 3, "telefone": "62996913531"}, {"nome": "Fernanda", "dia": 17, "mes": 3, "telefone": "62981186612"}, {"nome": "Fernanda", "dia": 27, "mes": 3, "telefone": "62992195581"}, {"nome": "Flavia", "dia": 23, "mes": 3, "telefone": "62986221984"}, {"nome": "Flavia", "dia": 30, "mes": 3, "telefone": "62996799160"}, {"nome": "Flavia", "dia": 18, "mes": 3, "telefone": "62983132944"}, {"nome": "Flavia", "dia": 24, "mes": 3, "telefone": "64999767446"}, {"nome": "Flavia", "dia": 28, "mes": 3, "telefone": "62999953602"}, {"nome": "Flavia", "dia": 18, "mes": 3, "telefone": "64999984104"}, {"nome": "Flavia", "dia": 13, "mes": 3, "telefone": "62993458558"}, {"nome": "Flavia", "dia": 24, "mes": 3, "telefone": "62981262023"}, {"nome": "Flaviane", "dia": 7, "mes": 3, "telefone": "62998051546"}, {"nome": "Fluvia", "dia": 29, "mes": 3, "telefone": "62981419303"}, {"nome": "Franciele", "dia": 15, "mes": 3, "telefone": "64999678828"}, {"nome": "Francinete", "dia": 11, "mes": 3, "telefone": "62981877041"}, {"nome": "Francyelle", "dia": 22, "mes": 3, "telefone": "62981737939"}, {"nome": "Gabriela", "dia": 23, "mes": 3, "telefone": "62982992816"}, {"nome": "Gabriela", "dia": 27, "mes": 3, "telefone": "62981185088"}, {"nome": "Gabriela", "dia": 9, "mes": 3, "telefone": "62992260849"}, {"nome": "Gabriela", "dia": 21, "mes": 3, "telefone": "64992907740"}, {"nome": "Gabriela", "dia": 30, "mes": 3, "telefone": "62999336013"}, {"nome": "Gabriela", "dia": 13, "mes": 3, "telefone": "64999723430"}, {"nome": "Gabriela", "dia": 27, "mes": 3, "telefone": "62998681411"}, {"nome": "Gabrielle", "dia": 20, "mes": 3, "telefone": "64984318915"}, {"nome": "Geane", "dia": 15, "mes": 3, "telefone": "62981118001"}, {"nome": "Georgia", "dia": 25, "mes": 3, "telefone": "47991979941"}, {"nome": "Georgia", "dia": 18, "mes": 3, "telefone": "62981478802"}, {"nome": "Geovana", "dia": 12, "mes": 3, "telefone": "62991052346"}, {"nome": "Geovana", "dia": 8, "mes": 3, "telefone": "62981510951"}, {"nome": "Geovanna", "dia": 3, "mes": 3, "telefone": "62999040556"}, {"nome": "Gessica", "dia": 3, "mes": 3, "telefone": "62992625172"}, {"nome": "Giovana", "dia": 5, "mes": 3, "telefone": "64992940393"}, {"nome": "Giovanna", "dia": 4, "mes": 3, "telefone": "62981647074"}, {"nome": "Gisela", "dia": 28, "mes": 3, "telefone": "62996228838"}, {"nome": "Gisele", "dia": 31, "mes": 3, "telefone": "11984562948"}, {"nome": "Giselle", "dia": 21, "mes": 3, "telefone": "62996313364"}, {"nome": "Giselle", "dia": 10, "mes": 3, "telefone": "62981314909"}, {"nome": "Giselle", "dia": 8, "mes": 3, "telefone": "62983335758"}, {"nome": "Giuvania", "dia": 25, "mes": 3, "telefone": "94991913103"}, {"nome": "Gizela", "dia": 13, "mes": 3, "telefone": "62991333458"}, {"nome": "Gizele", "dia": 4, "mes": 3, "telefone": "62984155038"}, {"nome": "Gizza", "dia": 7, "mes": 3, "telefone": "62981179706"}, {"nome": "Glady", "dia": 3, "mes": 3, "telefone": "62981153876"}, {"nome": "Glaucia", "dia": 3, "mes": 3, "telefone": "62991861851"}, {"nome": "Glaucia", "dia": 5, "mes": 3, "telefone": "38991253124"}, {"nome": "Glaudeci", "dia": 26, "mes": 3, "telefone": "63992457257"}, {"nome": "Gloria", "dia": 6, "mes": 3, "telefone": "62993726794"}, {"nome": "Gracielly", "dia": 22, "mes": 3, "telefone": "62998007737"}, {"nome": "Grasielle", "dia": 30, "mes": 3, "telefone": "66999659011"}, {"nome": "Grasielle", "dia": 26, "mes": 3, "telefone": "62984683807"}, {"nome": "Graziela", "dia": 30, "mes": 3, "telefone": "62981133350"}, {"nome": "Graziella", "dia": 20, "mes": 3, "telefone": "61999899042"}, {"nome": "Greyce", "dia": 8, "mes": 3, "telefone": "62985215542"}, {"nome": "Guttyane", "dia": 1, "mes": 3, "telefone": "62992010230"}, {"nome": "Hangela", "dia": 17, "mes": 3, "telefone": "62996260546"}, {"nome": "Hanna", "dia": 11, "mes": 3, "telefone": "62996251491"}, {"nome": "Helen", "dia": 6, "mes": 3, "telefone": "62984237095"}, {"nome": "Heles", "dia": 3, "mes": 3, "telefone": "63999854531"}, {"nome": "Helida", "dia": 29, "mes": 3, "telefone": "62981293600"}, {"nome": "Hellen", "dia": 28, "mes": 3, "telefone": "62982043557"}, {"nome": "Hellen", "dia": 5, "mes": 3, "telefone": "62985159954"}, {"nome": "Hellenn", "dia": 18, "mes": 3, "telefone": "62991360776"}, {"nome": "Heloisa", "dia": 28, "mes": 3, "telefone": "62982733918"}, {"nome": "Heloiza", "dia": 8, "mes": 3, "telefone": "62999723563"}, {"nome": "Hoberta", "dia": 27, "mes": 3, "telefone": "62996571473"}, {"nome": "Iana", "dia": 26, "mes": 3, "telefone": "62986344067"}, {"nome": "Iara", "dia": 14, "mes": 3, "telefone": "62984268659"}, {"nome": "Idelma", "dia": 24, "mes": 3, "telefone": "62986070080"}, {"nome": "Ieda", "dia": 9, "mes": 3, "telefone": "62982117933"}, {"nome": "Ilda", "dia": 8, "mes": 3, "telefone": "62981128386"}, {"nome": "Ines", "dia": 29, "mes": 3, "telefone": "62996794287"}, {"nome": "Ingrid", "dia": 29, "mes": 3, "telefone": "62981802740"}, {"nome": "Ingrid", "dia": 30, "mes": 3, "telefone": "62999730325"}, {"nome": "Ionara", "dia": 17, "mes": 3, "telefone": "62999770771"}, {"nome": "Iris", "dia": 22, "mes": 3, "telefone": "62999223711"}, {"nome": "Isabel", "dia": 20, "mes": 3, "telefone": "62996185707"}, {"nome": "Isabela", "dia": 24, "mes": 3, "telefone": "61981320444"}, {"nome": "Isabela", "dia": 29, "mes": 3, "telefone": "64996457628"}, {"nome": "Isabella", "dia": 2, "mes": 3, "telefone": "62982459303"}, {"nome": "Isabella", "dia": 8, "mes": 3, "telefone": "62981308338"}, {"nome": "Isabelle", "dia": 23, "mes": 3, "telefone": "62984300003"}, {"nome": "Isadora", "dia": 28, "mes": 3, "telefone": "6299272803"}, {"nome": "Isadora", "dia": 17, "mes": 3, "telefone": "62999506443"}, {"nome": "Isadora", "dia": 18, "mes": 3, "telefone": "64981329666"}, {"nome": "Isadora", "dia": 19, "mes": 3, "telefone": "62984263568"}, {"nome": "Isadora", "dia": 28, "mes": 3, "telefone": "62994497868"}, {"nome": "Isadora", "dia": 6, "mes": 3, "telefone": "62993376606"}, {"nome": "Isadora", "dia": 17, "mes": 3, "telefone": "62996316491"}, {"nome": "Isadora", "dia": 20, "mes": 3, "telefone": "62999782883"}, {"nome": "Ivana", "dia": 28, "mes": 3, "telefone": "62996799734"}, {"nome": "Ivana", "dia": 2, "mes": 3, "telefone": "62996880203"}, {"nome": "Ivana", "dia": 24, "mes": 3, "telefone": "62985045555"}, {"nome": "Ivanilde", "dia": 25, "mes": 3, "telefone": "62985135828"}, {"nome": "Ivone", "dia": 4, "mes": 3, "telefone": "62981044585"}, {"nome": "Ivone", "dia": 3, "mes": 3, "telefone": "62996999042"}, {"nome": "Ivonete", "dia": 6, "mes": 3, "telefone": "62999738767"}, {"nome": "Ivonete", "dia": 31, "mes": 3, "telefone": "62985521182"}, {"nome": "Ivonezete", "dia": 8, "mes": 3, "telefone": "62992889888"}, {"nome": "Izabel", "dia": 15, "mes": 3, "telefone": "62999731503"}, {"nome": "Izabel", "dia": 4, "mes": 3, "telefone": "62984342809"}, {"nome": "Izabela", "dia": 8, "mes": 3, "telefone": "62996799125"}, {"nome": "Izadora", "dia": 14, "mes": 3, "telefone": "62999071403"}, {"nome": "Izilda", "dia": 22, "mes": 3, "telefone": "11992713400"}, {"nome": "Jackeline", "dia": 16, "mes": 3, "telefone": "62981329795"}, {"nome": "Jacqueline", "dia": 9, "mes": 3, "telefone": "61981559401"}, {"nome": "Jakelline", "dia": 1, "mes": 3, "telefone": "62981140494"}, {"nome": "Janaina", "dia": 15, "mes": 3, "telefone": "62992289585"}, {"nome": "Janaina", "dia": 17, "mes": 3, "telefone": "62996378221"}, {"nome": "Janaina", "dia": 27, "mes": 3, "telefone": "62998481625"}, {"nome": "Janaina", "dia": 8, "mes": 3, "telefone": "62985612471"}, {"nome": "Janaynna", "dia": 6, "mes": 3, "telefone": "62992536900"}, {"nome": "Janine", "dia": 21, "mes": 3, "telefone": "62984157876"}, {"nome": "Janiquele", "dia": 22, "mes": 3, "telefone": "62984382114"}, {"nome": "Jayna", "dia": 19, "mes": 3, "telefone": "62982513838"}, {"nome": "Jeane", "dia": 3, "mes": 3, "telefone": "62981131657"}, {"nome": "Jessica", "dia": 27, "mes": 3, "telefone": "62981473897"}, {"nome": "Jessica", "dia": 18, "mes": 3, "telefone": "62984607913"}, {"nome": "Jessica", "dia": 21, "mes": 3, "telefone": "62999852481"}, {"nome": "Jessica", "dia": 17, "mes": 3, "telefone": "62981080408"}, {"nome": "Jessica", "dia": 8, "mes": 3, "telefone": "62992179647"}, {"nome": "Jessika", "dia": 30, "mes": 3, "telefone": "62999106486"}, {"nome": "Jhennefer", "dia": 29, "mes": 3, "telefone": "62995437686"}, {"nome": "Jiovanka", "dia": 11, "mes": 3, "telefone": "62992991457"}, {"nome": "Joana", "dia": 31, "mes": 3, "telefone": "62996799129"}, {"nome": "Joedna", "dia": 31, "mes": 3, "telefone": "62985235806"}, {"nome": "Jordana", "dia": 25, "mes": 3, "telefone": "62981278946"}, {"nome": "Jordana", "dia": 5, "mes": 3, "telefone": "64999241528"}, {"nome": "Joseneide", "dia": 23, "mes": 3, "telefone": "62981219137"}, {"nome": "Josiana", "dia": 4, "mes": 3, "telefone": "63992047721"}, {"nome": "Josiane", "dia": 13, "mes": 3, "telefone": "64981392865"}, {"nome": "Joyce", "dia": 17, "mes": 3, "telefone": "62981421413"}, {"nome": "Juliana", "dia": 9, "mes": 3, "telefone": "62999109926"}, {"nome": "Juliana", "dia": 24, "mes": 3, "telefone": "62992919619"}, {"nome": "Juliana", "dia": 31, "mes": 3, "telefone": "62981468555"}, {"nome": "Juliana", "dia": 6, "mes": 3, "telefone": "62981483222"}, {"nome": "Juliana", "dia": 12, "mes": 3, "telefone": "62991268112"}, {"nome": "Juliana", "dia": 7, "mes": 3, "telefone": "62981737160"}, {"nome": "Juliana", "dia": 14, "mes": 3, "telefone": "62999441403"}, {"nome": "Juliana", "dia": 1, "mes": 3, "telefone": "62996441541"}, {"nome": "Juliana", "dia": 9, "mes": 3, "telefone": "62983107288"}, {"nome": "Juliana", "dia": 18, "mes": 3, "telefone": "62996449059"}, {"nome": "Juliana", "dia": 11, "mes": 3, "telefone": "63999699599"}, {"nome": "Juliana", "dia": 28, "mes": 3, "telefone": "62999955646"}, {"nome": "Juliana", "dia": 30, "mes": 3, "telefone": "62992977212"}, {"nome": "Juliana", "dia": 19, "mes": 3, "telefone": "62992556463"}, {"nome": "Jullyana", "dia": 18, "mes": 3, "telefone": "62982663720"}, {"nome": "Jussara", "dia": 27, "mes": 3, "telefone": "75992383321"}, {"nome": "Jussiana", "dia": 27, "mes": 3, "telefone": "64999619878"}, {"nome": "Kalina", "dia": 19, "mes": 3, "telefone": "64999880224"}, {"nome": "Kamilla", "dia": 30, "mes": 3, "telefone": "64992788661"}, {"nome": "Karin", "dia": 6, "mes": 3, "telefone": "62984098114"}, {"nome": "Karina", "dia": 5, "mes": 3, "telefone": "62984055978"}, {"nome": "Karine", "dia": 7, "mes": 3, "telefone": "62992657203"}, {"nome": "Karine", "dia": 26, "mes": 3, "telefone": "62991430039"}, {"nome": "Karine", "dia": 28, "mes": 3, "telefone": "62982401080"}, {"nome": "Karine", "dia": 23, "mes": 3, "telefone": "62996765659"}, {"nome": "Karinne", "dia": 19, "mes": 3, "telefone": "62992298110"}, {"nome": "Karla", "dia": 25, "mes": 3, "telefone": "62985963490"}, {"nome": "Karla", "dia": 17, "mes": 3, "telefone": "62996011703"}, {"nome": "Karla", "dia": 15, "mes": 3, "telefone": "38998028388"}, {"nome": "Karolina", "dia": 1, "mes": 3, "telefone": "62981829549"}, {"nome": "Karoline", "dia": 11, "mes": 3, "telefone": "62981670162"}, {"nome": "Karoliny", "dia": 31, "mes": 3, "telefone": "62991861504"}, {"nome": "Kathleen", "dia": 7, "mes": 3, "telefone": "62993476770"}, {"nome": "Katia", "dia": 27, "mes": 3, "telefone": "64999645400"}, {"nome": "Katia", "dia": 8, "mes": 3, "telefone": "62999011021"}, {"nome": "Katia", "dia": 14, "mes": 3, "telefone": "64992258783"}, {"nome": "Keilah", "dia": 4, "mes": 3, "telefone": "62999764365"}, {"nome": "Keity", "dia": 30, "mes": 3, "telefone": "62993711111"}, {"nome": "Kelly", "dia": 1, "mes": 3, "telefone": "62998061474"}, {"nome": "Kelly", "dia": 1, "mes": 3, "telefone": "62986000005"}, {"nome": "Kelma", "dia": 19, "mes": 3, "telefone": "62992491111"}, {"nome": "Kenia", "dia": 17, "mes": 3, "telefone": "6199422270"}, {"nome": "Kenia", "dia": 1, "mes": 3, "telefone": "62999809944"}, {"nome": "Kenia", "dia": 8, "mes": 3, "telefone": "62994134524"}, {"nome": "Kenia", "dia": 3, "mes": 3, "telefone": "62991632525"}, {"nome": "Kenya", "dia": 12, "mes": 3, "telefone": "62991929411"}, {"nome": "Kesia", "dia": 11, "mes": 3, "telefone": "62984348308"}, {"nome": "Keury", "dia": 6, "mes": 3, "telefone": "62985370597"}, {"nome": "Kezia", "dia": 9, "mes": 3, "telefone": "62981319133"}, {"nome": "Klesleyanne", "dia": 26, "mes": 3, "telefone": "62999996191"}, {"nome": "Krishna", "dia": 30, "mes": 3, "telefone": "62992597930"}, {"nome": "Lacilda", "dia": 7, "mes": 3, "telefone": "62996370872"}, {"nome": "Laila", "dia": 7, "mes": 3, "telefone": "62982230708"}, {"nome": "Laillane", "dia": 10, "mes": 3, "telefone": "62991151450"}, {"nome": "Lais", "dia": 29, "mes": 3, "telefone": "62999669559"}, {"nome": "Lais", "dia": 1, "mes": 3, "telefone": "62996659235"}, {"nome": "Lana", "dia": 5, "mes": 3, "telefone": "62981411516"}, {"nome": "Lanucy", "dia": 3, "mes": 3, "telefone": "62981355651"}, {"nome": "Lara", "dia": 2, "mes": 3, "telefone": "61996232320"}, {"nome": "Lara", "dia": 17, "mes": 3, "telefone": "61984337261"}, {"nome": "Larissa", "dia": 19, "mes": 3, "telefone": "62999082709"}, {"nome": "Larissa", "dia": 1, "mes": 3, "telefone": "66984186263"}, {"nome": "Larissa", "dia": 16, "mes": 3, "telefone": "62992291511"}, {"nome": "Larissa", "dia": 16, "mes": 3, "telefone": "62994972011"}, {"nome": "Larissa", "dia": 25, "mes": 3, "telefone": "62981351377"}, {"nome": "Larissa", "dia": 31, "mes": 3, "telefone": "62992920110"}, {"nome": "Larissa", "dia": 30, "mes": 3, "telefone": "62981420567"}, {"nome": "Larisse", "dia": 14, "mes": 3, "telefone": "64999980880"}, {"nome": "Lauana", "dia": 7, "mes": 3, "telefone": "94991026838"}, {"nome": "Laura", "dia": 15, "mes": 3, "telefone": "6299261925"}, {"nome": "Laura", "dia": 4, "mes": 3, "telefone": "62999970456"}, {"nome": "Laura", "dia": 7, "mes": 3, "telefone": "62991084498"}, {"nome": "Laura", "dia": 25, "mes": 3, "telefone": "62981612175"}, {"nome": "Laura", "dia": 20, "mes": 3, "telefone": "62999124584"}, {"nome": "Layane", "dia": 10, "mes": 3, "telefone": "62996881706"}, {"nome": "Lazara", "dia": 10, "mes": 3, "telefone": "62992439393"}, {"nome": "Lea", "dia": 1, "mes": 3, "telefone": "62984149840"}, {"nome": "Leandra", "dia": 12, "mes": 3, "telefone": "62999779717"}, {"nome": "Leda", "dia": 4, "mes": 3, "telefone": "62981118399"}, {"nome": "Leda", "dia": 23, "mes": 3, "telefone": "62984016868"}, {"nome": "Ledamir", "dia": 2, "mes": 3, "telefone": "62984699600"}, {"nome": "Lehina", "dia": 27, "mes": 3, "telefone": "66999724969"}, {"nome": "Leila", "dia": 27, "mes": 3, "telefone": "62996627610"}, {"nome": "Leila", "dia": 9, "mes": 3, "telefone": "62981981999"}, {"nome": "Leilda", "dia": 14, "mes": 3, "telefone": "62991694180"}, {"nome": "Leonor", "dia": 14, "mes": 3, "telefone": "62999739358"}, {"nome": "Leticia", "dia": 26, "mes": 3, "telefone": "62982548394"}, {"nome": "Leticia", "dia": 12, "mes": 3, "telefone": "62981785855"}, {"nome": "Leticia", "dia": 12, "mes": 3, "telefone": "62985619434"}, {"nome": "Leticia", "dia": 2, "mes": 3, "telefone": "62981636276"}, {"nome": "Leticia", "dia": 22, "mes": 3, "telefone": "62984626092"}, {"nome": "Leticia", "dia": 1, "mes": 3, "telefone": "62996798315"}, {"nome": "Liane", "dia": 6, "mes": 3, "telefone": "61996457486"}, {"nome": "Licia", "dia": 20, "mes": 3, "telefone": "62991920329"}, {"nome": "Lidia", "dia": 2, "mes": 3, "telefone": "62998642314"}, {"nome": "Lidiane", "dia": 17, "mes": 3, "telefone": "64999834756"}, {"nome": "Lidiane", "dia": 19, "mes": 3, "telefone": "62981616158"}, {"nome": "Ligia", "dia": 30, "mes": 3, "telefone": "62992390860"}, {"nome": "Lilian", "dia": 12, "mes": 3, "telefone": "62981161924"}, {"nome": "Lilian", "dia": 24, "mes": 3, "telefone": "62981618118"}, {"nome": "Liliane", "dia": 14, "mes": 3, "telefone": "6281168212"}, {"nome": "Liliane", "dia": 11, "mes": 3, "telefone": "6299710863"}, {"nome": "Lillian", "dia": 9, "mes": 3, "telefone": "62981161700"}, {"nome": "Lilyan", "dia": 12, "mes": 3, "telefone": "62981248124"}, {"nome": "Lindaura", "dia": 27, "mes": 3, "telefone": "62981470152"}, {"nome": "Livia", "dia": 1, "mes": 3, "telefone": "62981159375"}, {"nome": "Livia", "dia": 19, "mes": 3, "telefone": "62982914343"}, {"nome": "Livia", "dia": 6, "mes": 3, "telefone": "62991043332"}, {"nome": "Loianne", "dia": 11, "mes": 3, "telefone": "62992831683"}, {"nome": "Lorena", "dia": 16, "mes": 3, "telefone": "62984989065"}, {"nome": "Lorena", "dia": 1, "mes": 3, "telefone": "62981088058"}, {"nome": "Lorena", "dia": 22, "mes": 3, "telefone": "62992215050"}, {"nome": "Lorrainy", "dia": 26, "mes": 3, "telefone": "62983335656"}, {"nome": "Luana", "dia": 10, "mes": 3, "telefone": "64981244756"}, {"nome": "Lucelia", "dia": 20, "mes": 3, "telefone": "62996837360"}, {"nome": "Lucia", "dia": 25, "mes": 3, "telefone": "62992421291"}, {"nome": "Lucia", "dia": 29, "mes": 3, "telefone": "62981363709"}, {"nome": "Lucia", "dia": 29, "mes": 3, "telefone": "62991113085"}, {"nome": "Lucia", "dia": 27, "mes": 3, "telefone": "62999760717"}, {"nome": "Lucia", "dia": 28, "mes": 3, "telefone": "62991655111"}, {"nome": "Luciana", "dia": 7, "mes": 3, "telefone": "62996393440"}, {"nome": "Luciana", "dia": 23, "mes": 3, "telefone": "62982394046"}, {"nome": "Luciana", "dia": 15, "mes": 3, "telefone": "61982268428"}, {"nome": "Luciana", "dia": 4, "mes": 3, "telefone": "62981097473"}, {"nome": "Luciana", "dia": 5, "mes": 3, "telefone": "62996319373"}, {"nome": "Luciana", "dia": 6, "mes": 3, "telefone": "62982148930"}, {"nome": "Luciana", "dia": 14, "mes": 3, "telefone": "62984157777"}, {"nome": "Luciene", "dia": 22, "mes": 3, "telefone": "62981118780"}, {"nome": "Luciene", "dia": 22, "mes": 3, "telefone": "62981618088"}, {"nome": "Lucienne", "dia": 10, "mes": 3, "telefone": "62999780000"}, {"nome": "Lucilene", "dia": 20, "mes": 3, "telefone": "62981189936"}, {"nome": "Lucimara", "dia": 24, "mes": 3, "telefone": "62999167114"}, {"nome": "Lucineide", "dia": 24, "mes": 3, "telefone": "62983098558"}, {"nome": "Luciola", "dia": 1, "mes": 3, "telefone": "62981351670"}, {"nome": "Ludimila", "dia": 28, "mes": 3, "telefone": "62981165261"}, {"nome": "Ludimila", "dia": 18, "mes": 3, "telefone": "62996046744"}, {"nome": "Ludmila", "dia": 13, "mes": 3, "telefone": "62995723238"}, {"nome": "Ludmila", "dia": 24, "mes": 3, "telefone": "62999769041"}, {"nome": "Ludmilla", "dia": 19, "mes": 3, "telefone": "62984085448"}, {"nome": "Ludmilla", "dia": 17, "mes": 3, "telefone": "62996289591"}, {"nome": "Ludmilla", "dia": 23, "mes": 3, "telefone": "62981276432"}, {"nome": "Ludymilla", "dia": 22, "mes": 3, "telefone": "62981759088"}, {"nome": "Luiza", "dia": 31, "mes": 3, "telefone": "89999226009"}, {"nome": "Luiza", "dia": 1, "mes": 3, "telefone": "62981781373"}, {"nome": "Luiza De", "dia": 22, "mes": 3, "telefone": "62999450749"}, {"nome": "Luizi", "dia": 10, "mes": 3, "telefone": "61993033897"}, {"nome": "Lussandra", "dia": 11, "mes": 3, "telefone": "62985850793"}, {"nome": "Luzilene", "dia": 21, "mes": 3, "telefone": "62982072651"}, {"nome": "Lydia", "dia": 29, "mes": 3, "telefone": "62999736869"}, {"nome": "Lyz", "dia": 12, "mes": 3, "telefone": "62996374856"}, {"nome": "Mabel", "dia": 1, "mes": 3, "telefone": "62981110144"}, {"nome": "Mailine", "dia": 20, "mes": 3, "telefone": "62992857204"}, {"nome": "Maira", "dia": 2, "mes": 3, "telefone": "62992987773"}, {"nome": "Maisa", "dia": 6, "mes": 3, "telefone": "62999696824"}, {"nome": "Maize", "dia": 25, "mes": 3, "telefone": "62998392525"}, {"nome": "Manuela", "dia": 4, "mes": 3, "telefone": "62994214994"}, {"nome": "Mara", "dia": 15, "mes": 3, "telefone": "62991130244"}, {"nome": "Mara", "dia": 17, "mes": 3, "telefone": "62981468780"}, {"nome": "Maraisa", "dia": 31, "mes": 3, "telefone": "62982895000"}, {"nome": "Maraisa", "dia": 1, "mes": 3, "telefone": "62981150843"}, {"nome": "Marcela", "dia": 22, "mes": 3, "telefone": "71991788698"}, {"nome": "Marcela", "dia": 24, "mes": 3, "telefone": "62996964852"}, {"nome": "Marcella", "dia": 7, "mes": 3, "telefone": "64996479686"}, {"nome": "Marcella", "dia": 21, "mes": 3, "telefone": "62981269030"}, {"nome": "Marcella", "dia": 8, "mes": 3, "telefone": "62981595658"}, {"nome": "Marcia", "dia": 11, "mes": 3, "telefone": "62999740729"}, {"nome": "Marcia", "dia": 16, "mes": 3, "telefone": "62984068130"}, {"nome": "Marcia", "dia": 6, "mes": 3, "telefone": "62982868830"}, {"nome": "Marcia", "dia": 31, "mes": 3, "telefone": "62996269998"}, {"nome": "Marcia", "dia": 27, "mes": 3, "telefone": "62999334105"}, {"nome": "Marcia", "dia": 25, "mes": 3, "telefone": "62996070399"}, {"nome": "Marcia", "dia": 13, "mes": 3, "telefone": "62996110561"}, {"nome": "Marcia", "dia": 11, "mes": 3, "telefone": "62981873272"}, {"nome": "Marcia", "dia": 31, "mes": 3, "telefone": "62999714669"}, {"nome": "Marcia", "dia": 28, "mes": 3, "telefone": "62982154540"}, {"nome": "Marcia", "dia": 28, "mes": 3, "telefone": "62991045094"}, {"nome": "Marcia", "dia": 6, "mes": 3, "telefone": "62998481858"}, {"nome": "Marcia", "dia": 9, "mes": 3, "telefone": "62999923802"}, {"nome": "Marcia", "dia": 1, "mes": 3, "telefone": "62982393586"}, {"nome": "Marcia", "dia": 12, "mes": 3, "telefone": "62996889154"}, {"nome": "Marcilene", "dia": 23, "mes": 3, "telefone": "62981189213"}, {"nome": "Margarete", "dia": 18, "mes": 3, "telefone": "62999451416"}, {"nome": "Margarida", "dia": 26, "mes": 3, "telefone": "16991293737"}, {"nome": "Maria", "dia": 29, "mes": 3, "telefone": "62981117171"}, {"nome": "Maria", "dia": 31, "mes": 3, "telefone": "62981472712"}, {"nome": "Maria", "dia": 17, "mes": 3, "telefone": "62981349754"}, {"nome": "Maria Adelaide", "dia": 10, "mes": 3, "telefone": "62981817278"}, {"nome": "Maria Angela", "dia": 24, "mes": 3, "telefone": "62999711556"}, {"nome": "Maria Angelica", "dia": 29, "mes": 3, "telefone": "62992239812"}, {"nome": "Maria Aparecida", "dia": 16, "mes": 3, "telefone": "62981564331"}, {"nome": "Maria Aparecida", "dia": 25, "mes": 3, "telefone": "62984858179"}, {"nome": "Maria Aparecida", "dia": 24, "mes": 3, "telefone": "64999972705"}, {"nome": "Maria Aparecida", "dia": 23, "mes": 3, "telefone": "62999787091"}, {"nome": "Maria Aparecida", "dia": 6, "mes": 3, "telefone": "64999882003"}, {"nome": "Maria Berenice", "dia": 17, "mes": 3, "telefone": "62996868226"}, {"nome": "Maria Celia", "dia": 14, "mes": 3, "telefone": "62982100835"}, {"nome": "Maria Celia", "dia": 16, "mes": 3, "telefone": "62999751444"}, {"nome": "Maria Cirlene", "dia": 31, "mes": 3, "telefone": "62996799899"}, {"nome": "Maria Cristina", "dia": 14, "mes": 3, "telefone": "62991860230"}, {"nome": "Maria Cristina", "dia": 31, "mes": 3, "telefone": "62999986256"}, {"nome": "Maria Da", "dia": 30, "mes": 3, "telefone": "61981684793"}, {"nome": "Maria Da", "dia": 17, "mes": 3, "telefone": "62999806735"}, {"nome": "Maria Da", "dia": 17, "mes": 3, "telefone": "62996145200"}, {"nome": "Maria Dalva", "dia": 2, "mes": 3, "telefone": "62996818580"}, {"nome": "Maria Das", "dia": 22, "mes": 3, "telefone": "62981401818"}, {"nome": "Maria Das", "dia": 14, "mes": 3, "telefone": "62991392007"}, {"nome": "Maria De", "dia": 10, "mes": 3, "telefone": "62996352212"}, {"nome": "Maria De", "dia": 16, "mes": 3, "telefone": "62999140889"}, {"nome": "Maria De", "dia": 24, "mes": 3, "telefone": "62982509955"}, {"nome": "Maria Deuselina", "dia": 13, "mes": 3, "telefone": "62985377675"}, {"nome": "Maria Do", "dia": 2, "mes": 3, "telefone": "62984213518"}, {"nome": "Maria Do", "dia": 20, "mes": 3, "telefone": "62999722704"}, {"nome": "Maria Do", "dia": 13, "mes": 3, "telefone": "62996374602"}, {"nome": "Maria Dulce", "dia": 16, "mes": 3, "telefone": "62992637417"}, {"nome": "Maria Eduarda", "dia": 31, "mes": 3, "telefone": "62993126439"}, {"nome": "Maria Eduarda", "dia": 6, "mes": 3, "telefone": "62982658124"}, {"nome": "Maria Eduarda", "dia": 13, "mes": 3, "telefone": "62982739069"}, {"nome": "Maria Eugenia", "dia": 24, "mes": 3, "telefone": "63992519990"}, {"nome": "Maria Eunice", "dia": 17, "mes": 3, "telefone": "62999730257"}, {"nome": "Maria Fernanda", "dia": 4, "mes": 3, "telefone": "34999134000"}, {"nome": "Maria Flavia", "dia": 31, "mes": 3, "telefone": "62981930032"}, {"nome": "Maria Gorete", "dia": 26, "mes": 3, "telefone": "62985099916"}, {"nome": "Maria Gorete", "dia": 16, "mes": 3, "telefone": "62998052946"}, {"nome": "Maria Guida", "dia": 17, "mes": 3, "telefone": "64993327995"}, {"nome": "Maria Helena", "dia": 31, "mes": 3, "telefone": "62999743998"}, {"nome": "Maria Helena", "dia": 17, "mes": 3, "telefone": "62999762634"}, {"nome": "Maria Heloisa", "dia": 10, "mes": 3, "telefone": "62982826860"}, {"nome": "Maria Jose", "dia": 15, "mes": 3, "telefone": "62999957235"}, {"nome": "Maria Jose", "dia": 19, "mes": 3, "telefone": "62984349093"}, {"nome": "Maria Jose", "dia": 20, "mes": 3, "telefone": "62984648214"}, {"nome": "Maria Jose", "dia": 18, "mes": 3, "telefone": "62981986386"}, {"nome": "Maria Jose", "dia": 19, "mes": 3, "telefone": "62982728822"}, {"nome": "Maria Jose", "dia": 19, "mes": 3, "telefone": "62999803703"}, {"nome": "Maria Jose", "dia": 4, "mes": 3, "telefone": "62984320153"}, {"nome": "Maria Joze", "dia": 19, "mes": 3, "telefone": "61985181708"}, {"nome": "Maria Lucia", "dia": 18, "mes": 3, "telefone": "62981368434"}, {"nome": "Maria Luiza", "dia": 8, "mes": 3, "telefone": "62981376440"}, {"nome": "Maria Luiza", "dia": 13, "mes": 3, "telefone": "62982403600"}, {"nome": "Maria Luiza", "dia": 27, "mes": 3, "telefone": "6299017676"}, {"nome": "Maria Madalena", "dia": 23, "mes": 3, "telefone": "62992704401"}, {"nome": "Maria Magnolia", "dia": 15, "mes": 3, "telefone": "62999450459"}, {"nome": "Maria Rita", "dia": 20, "mes": 3, "telefone": "62981607878"}, {"nome": "Maria Salete", "dia": 25, "mes": 3, "telefone": "62992160985"}, {"nome": "Maria Terezinha", "dia": 11, "mes": 3, "telefone": "62999995519"}, {"nome": "Maria Terezinha", "dia": 7, "mes": 3, "telefone": "62981277960"}, {"nome": "Maria Virginia", "dia": 4, "mes": 3, "telefone": "62999935663"}, {"nome": "Maria Zulene", "dia": 12, "mes": 3, "telefone": "62984013449"}, {"nome": "Mariana", "dia": 27, "mes": 3, "telefone": "62981180787"}, {"nome": "Mariana", "dia": 17, "mes": 3, "telefone": "62996444485"}, {"nome": "Mariana", "dia": 1, "mes": 3, "telefone": "62992128489"}, {"nome": "Mariana", "dia": 8, "mes": 3, "telefone": "62984857475"}, {"nome": "Mariana", "dia": 23, "mes": 3, "telefone": "62994335080"}, {"nome": "Mariana", "dia": 13, "mes": 3, "telefone": "62996468858"}, {"nome": "Mariana", "dia": 31, "mes": 3, "telefone": "62982480575"}, {"nome": "Mariana", "dia": 22, "mes": 3, "telefone": "34988051600"}, {"nome": "Marielli", "dia": 30, "mes": 3, "telefone": "62981617988"}, {"nome": "Mariely", "dia": 1, "mes": 3, "telefone": "62984715098"}, {"nome": "Marieta", "dia": 12, "mes": 3, "telefone": "62996168200"}, {"nome": "Mariinha", "dia": 28, "mes": 3, "telefone": "62992517122"}, {"nome": "Marilda", "dia": 5, "mes": 3, "telefone": "62991069476"}, {"nome": "Marilia", "dia": 24, "mes": 3, "telefone": "62981760317"}, {"nome": "Marilia", "dia": 28, "mes": 3, "telefone": "62981467966"}, {"nome": "Marilia", "dia": 21, "mes": 3, "telefone": "62981887000"}, {"nome": "Marilia", "dia": 25, "mes": 3, "telefone": "62981099393"}, {"nome": "Marilucia", "dia": 19, "mes": 3, "telefone": "62999996989"}, {"nome": "Marina", "dia": 3, "mes": 3, "telefone": "62983102983"}, {"nome": "Marina", "dia": 3, "mes": 3, "telefone": "62981423551"}, {"nome": "Marisa", "dia": 26, "mes": 3, "telefone": "62999979045"}, {"nome": "Marise", "dia": 26, "mes": 3, "telefone": "62985782360"}, {"nome": "Marize", "dia": 10, "mes": 3, "telefone": "61999425654"}, {"nome": "Marize", "dia": 18, "mes": 3, "telefone": "62984221803"}, {"nome": "Marizete", "dia": 11, "mes": 3, "telefone": "62998679430"}, {"nome": "Marlene", "dia": 26, "mes": 3, "telefone": "62999746101"}, {"nome": "Marlene", "dia": 12, "mes": 3, "telefone": "62991603003"}, {"nome": "Marlene", "dia": 15, "mes": 3, "telefone": "62983177100"}, {"nome": "Marlene", "dia": 25, "mes": 3, "telefone": "62985979524"}, {"nome": "Marlene", "dia": 15, "mes": 3, "telefone": "62981819043"}, {"nome": "Martine", "dia": 21, "mes": 3, "telefone": "62984122991"}, {"nome": "Maryna", "dia": 27, "mes": 3, "telefone": "62981418581"}, {"nome": "Mayara", "dia": 7, "mes": 3, "telefone": "62982251481"}, {"nome": "Mayara", "dia": 10, "mes": 3, "telefone": "62984002154"}, {"nome": "Mayra", "dia": 9, "mes": 3, "telefone": "64999044377"}, {"nome": "Maysa", "dia": 29, "mes": 3, "telefone": "62984649849"}, {"nome": "Maysa", "dia": 23, "mes": 3, "telefone": "62984227224"}, {"nome": "Meire", "dia": 19, "mes": 3, "telefone": "62999717085"}, {"nome": "Mel", "dia": 3, "mes": 3, "telefone": "62981130303"}, {"nome": "Melania", "dia": 14, "mes": 3, "telefone": "62981147097"}, {"nome": "Melina", "dia": 12, "mes": 3, "telefone": "62992433665"}, {"nome": "Mercia", "dia": 11, "mes": 3, "telefone": "62991527806"}, {"nome": "Merielle", "dia": 6, "mes": 3, "telefone": "62985327149"}, {"nome": "Michele", "dia": 31, "mes": 3, "telefone": "62999566766"}, {"nome": "Micheline", "dia": 4, "mes": 3, "telefone": "62985619559"}, {"nome": "Michelle", "dia": 4, "mes": 3, "telefone": "62981674664"}, {"nome": "Michelle", "dia": 8, "mes": 3, "telefone": "62998283071"}, {"nome": "Midori", "dia": 15, "mes": 3, "telefone": "62981770367"}, {"nome": "Milena", "dia": 21, "mes": 3, "telefone": "62991731482"}, {"nome": "Milena", "dia": 12, "mes": 3, "telefone": "62996865225"}, {"nome": "Milena", "dia": 27, "mes": 3, "telefone": "62981419980"}, {"nome": "Milena", "dia": 12, "mes": 3, "telefone": "62992419470"}, {"nome": "Millene", "dia": 30, "mes": 3, "telefone": "62981531784"}, {"nome": "Mirelle", "dia": 23, "mes": 3, "telefone": "64999075954"}, {"nome": "Mirian", "dia": 31, "mes": 3, "telefone": "66996155457"}, {"nome": "Monica", "dia": 24, "mes": 3, "telefone": "62996119399"}, {"nome": "Monica", "dia": 21, "mes": 3, "telefone": "62981060009"}, {"nome": "Monike", "dia": 12, "mes": 3, "telefone": "62992965435"}, {"nome": "Monique", "dia": 8, "mes": 3, "telefone": "62999240804"}, {"nome": "Nadia", "dia": 28, "mes": 3, "telefone": "62981155638"}, {"nome": "Nadia", "dia": 15, "mes": 3, "telefone": "62998099997"}, {"nome": "Nahdia", "dia": 31, "mes": 3, "telefone": "62999953376"}, {"nome": "Nancy", "dia": 24, "mes": 3, "telefone": "62985194239"}, {"nome": "Nara", "dia": 4, "mes": 3, "telefone": "62991461500"}, {"nome": "Nasara", "dia": 18, "mes": 3, "telefone": "62981510225"}, {"nome": "Natalia", "dia": 25, "mes": 3, "telefone": "62981916953"}, {"nome": "Natalie", "dia": 25, "mes": 3, "telefone": "62985354748"}, {"nome": "Nathalia", "dia": 14, "mes": 3, "telefone": "41999995233"}, {"nome": "Nathalia", "dia": 26, "mes": 3, "telefone": "62982855050"}, {"nome": "Nathalia", "dia": 15, "mes": 3, "telefone": "62996647337"}, {"nome": "Nathalia", "dia": 19, "mes": 3, "telefone": "62999731990"}, {"nome": "Nathalia", "dia": 14, "mes": 3, "telefone": "34993147133"}, {"nome": "Nayana", "dia": 17, "mes": 3, "telefone": "62996344444"}, {"nome": "Nayara", "dia": 16, "mes": 3, "telefone": "62999997055"}, {"nome": "Nayna", "dia": 7, "mes": 3, "telefone": "62998705380"}, {"nome": "Nebia", "dia": 1, "mes": 3, "telefone": "62981656852"}, {"nome": "Neide", "dia": 19, "mes": 3, "telefone": "62999113771"}, {"nome": "Neide", "dia": 31, "mes": 3, "telefone": "62981433553"}, {"nome": "Neidemar", "dia": 27, "mes": 3, "telefone": "62981832195"}, {"nome": "Neila", "dia": 29, "mes": 3, "telefone": "62981050970"}, {"nome": "Neiva", "dia": 28, "mes": 3, "telefone": "69981267305"}, {"nome": "Neliane", "dia": 21, "mes": 3, "telefone": "62982979204"}, {"nome": "Nilceana", "dia": 26, "mes": 3, "telefone": "62981815520"}, {"nome": "Nina", "dia": 14, "mes": 3, "telefone": "62996377955"}, {"nome": "Nubia", "dia": 6, "mes": 3, "telefone": "62984655970"}, {"nome": "Olinda", "dia": 24, "mes": 3, "telefone": "62981790050"}, {"nome": "Olinda", "dia": 24, "mes": 3, "telefone": "62996267046"}, {"nome": "Onedir", "dia": 4, "mes": 3, "telefone": "64999062890"}, {"nome": "Ormania", "dia": 28, "mes": 3, "telefone": "62985915554"}, {"nome": "Ormezinda", "dia": 31, "mes": 3, "telefone": "62984845452"}, {"nome": "Papline", "dia": 28, "mes": 3, "telefone": "62981042216"}, {"nome": "Patricia", "dia": 23, "mes": 3, "telefone": "62999972262"}, {"nome": "Patricia", "dia": 20, "mes": 3, "telefone": "62992425351"}, {"nome": "Patricia", "dia": 15, "mes": 3, "telefone": "62981474334"}, {"nome": "Patricia", "dia": 24, "mes": 3, "telefone": "62982438901"}, {"nome": "Patricia", "dia": 30, "mes": 3, "telefone": "610415907724"}, {"nome": "Patricia", "dia": 28, "mes": 3, "telefone": "64984574967"}, {"nome": "Patricia", "dia": 22, "mes": 3, "telefone": "62981637757"}, {"nome": "Patricia", "dia": 31, "mes": 3, "telefone": "11986609397"}, {"nome": "Patricia", "dia": 11, "mes": 3, "telefone": "62981440909"}, {"nome": "Patricia", "dia": 27, "mes": 3, "telefone": "62991470250"}, {"nome": "Patricia", "dia": 30, "mes": 3, "telefone": "62982591838"}, {"nome": "Paula", "dia": 7, "mes": 3, "telefone": "66999062204"}, {"nome": "Paula", "dia": 30, "mes": 3, "telefone": "62981950946"}, {"nome": "Paula", "dia": 21, "mes": 3, "telefone": "62996075317"}, {"nome": "Paula", "dia": 16, "mes": 3, "telefone": "62999725009"}, {"nome": "Paula", "dia": 13, "mes": 3, "telefone": "62994423563"}, {"nome": "Paulinne", "dia": 31, "mes": 3, "telefone": "62981153620"}, {"nome": "Petrina", "dia": 31, "mes": 3, "telefone": "62999688701"}, {"nome": "Poliana", "dia": 16, "mes": 3, "telefone": "34992012220"}, {"nome": "Poliana", "dia": 13, "mes": 3, "telefone": "62999980101"}, {"nome": "Poliana", "dia": 25, "mes": 3, "telefone": "62985631823"}, {"nome": "Pollyana", "dia": 28, "mes": 3, "telefone": "63992074094"}, {"nome": "Pollyanna", "dia": 14, "mes": 3, "telefone": "62994306666"}, {"nome": "Priscila", "dia": 11, "mes": 3, "telefone": "62991049493"}, {"nome": "Priscila", "dia": 28, "mes": 3, "telefone": "62991126635"}, {"nome": "Priscilla", "dia": 21, "mes": 3, "telefone": "62984410288"}, {"nome": "Priscilla", "dia": 30, "mes": 3, "telefone": "62998147881"}, {"nome": "Priscilla", "dia": 1, "mes": 3, "telefone": "62984181292"}, {"nome": "Priscilla", "dia": 11, "mes": 3, "telefone": "62981636160"}, {"nome": "Priscilla", "dia": 7, "mes": 3, "telefone": "62999752056"}, {"nome": "Quelsilene", "dia": 7, "mes": 3, "telefone": "62991378846"}, {"nome": "Rachel", "dia": 28, "mes": 3, "telefone": "64981111178"}, {"nome": "Radilla", "dia": 3, "mes": 3, "telefone": "62996433474"}, {"nome": "Rafaela", "dia": 22, "mes": 3, "telefone": "62981036163"}, {"nome": "Rafaela", "dia": 27, "mes": 3, "telefone": "62999257440"}, {"nome": "Raissa", "dia": 27, "mes": 3, "telefone": "62995100932"}, {"nome": "Raquel", "dia": 9, "mes": 3, "telefone": "62981731463"}, {"nome": "Raquel", "dia": 30, "mes": 3, "telefone": "62984238935"}, {"nome": "Raquel", "dia": 17, "mes": 3, "telefone": "62996224404"}, {"nome": "Raquel", "dia": 18, "mes": 3, "telefone": "62981223669"}, {"nome": "Rayza", "dia": 6, "mes": 3, "telefone": "62982291040"}, {"nome": "Regilene", "dia": 17, "mes": 3, "telefone": "62981958521"}, {"nome": "Regina", "dia": 31, "mes": 3, "telefone": "19992930968"}, {"nome": "Regina", "dia": 1, "mes": 3, "telefone": "62999741066"}, {"nome": "Regina", "dia": 8, "mes": 3, "telefone": "62996178478"}, {"nome": "Regina", "dia": 23, "mes": 3, "telefone": "62999723404"}, {"nome": "Regina", "dia": 26, "mes": 3, "telefone": "62996280369"}, {"nome": "Regina", "dia": 1, "mes": 3, "telefone": "62992339231"}, {"nome": "Reila", "dia": 27, "mes": 3, "telefone": "64996411454"}, {"nome": "Rejane", "dia": 21, "mes": 3, "telefone": "62984142136"}, {"nome": "Rejane", "dia": 23, "mes": 3, "telefone": "62985466616"}, {"nome": "Renata", "dia": 31, "mes": 3, "telefone": "62996710123"}, {"nome": "Renata", "dia": 6, "mes": 3, "telefone": "62982495263"}, {"nome": "Renata", "dia": 21, "mes": 3, "telefone": "62981168233"}, {"nome": "Renata", "dia": 7, "mes": 3, "telefone": "62999750151"}, {"nome": "Renatha", "dia": 5, "mes": 3, "telefone": "62994109893"}, {"nome": "Renir", "dia": 1, "mes": 3, "telefone": "62982199107"}, {"nome": "Rhadija", "dia": 19, "mes": 3, "telefone": "62982612266"}, {"nome": "Rita", "dia": 10, "mes": 3, "telefone": "62996072409"}, {"nome": "Roberta", "dia": 10, "mes": 3, "telefone": "62984646591"}, {"nome": "Roberta", "dia": 18, "mes": 3, "telefone": "62998068704"}, {"nome": "Roberta", "dia": 4, "mes": 3, "telefone": "62999199990"}, {"nome": "Roberta", "dia": 10, "mes": 3, "telefone": "62981935293"}, {"nome": "Roberta", "dia": 28, "mes": 3, "telefone": "62984182391"}, {"nome": "Rosane", "dia": 29, "mes": 3, "telefone": "62992217696"}, {"nome": "Rosanea", "dia": 17, "mes": 3, "telefone": "62996875616"}, {"nome": "Rosangela", "dia": 26, "mes": 3, "telefone": "62984046909"}, {"nome": "Rosangela", "dia": 24, "mes": 3, "telefone": "62996786629"}, {"nome": "Rosangela", "dia": 4, "mes": 3, "telefone": "62981820444"}, {"nome": "Rosemar", "dia": 12, "mes": 3, "telefone": "62981587948"}, {"nome": "Rosimeire", "dia": 27, "mes": 3, "telefone": "64992189191"}, {"nome": "Rosimeire", "dia": 26, "mes": 3, "telefone": "62984751251"}, {"nome": "Rosseanalopes", "dia": 11, "mes": 3, "telefone": "66999880010"}, {"nome": "Ruth", "dia": 30, "mes": 3, "telefone": "62984889613"}, {"nome": "Ruth", "dia": 13, "mes": 3, "telefone": "62996111351"}, {"nome": "Sabrina", "dia": 13, "mes": 3, "telefone": "62999998081"}, {"nome": "Salua", "dia": 1, "mes": 3, "telefone": "62999363630"}, {"nome": "Samanta", "dia": 19, "mes": 3, "telefone": "62999082812"}, {"nome": "Samira", "dia": 27, "mes": 3, "telefone": "62996895426"}, {"nome": "Samira", "dia": 5, "mes": 3, "telefone": "62998006412"}, {"nome": "Samoa", "dia": 3, "mes": 3, "telefone": "62984777960"}, {"nome": "Sandra", "dia": 27, "mes": 3, "telefone": "62981162257"}, {"nome": "Sandra", "dia": 29, "mes": 3, "telefone": "62999684414"}, {"nome": "Sandra", "dia": 12, "mes": 3, "telefone": "62999638917"}, {"nome": "Sandra", "dia": 10, "mes": 3, "telefone": "62999851045"}, {"nome": "Sandra", "dia": 5, "mes": 3, "telefone": "62984711661"}, {"nome": "Sandra", "dia": 23, "mes": 3, "telefone": "63992297224"}, {"nome": "Sani", "dia": 30, "mes": 3, "telefone": "62999197040"}, {"nome": "Sanny", "dia": 5, "mes": 3, "telefone": "16992025012"}, {"nome": "Sanny", "dia": 28, "mes": 3, "telefone": "62981218252"}, {"nome": "Sara", "dia": 31, "mes": 3, "telefone": "62998111077"}, {"nome": "Semadar", "dia": 13, "mes": 3, "telefone": "63999843392"}, {"nome": "Serjana", "dia": 12, "mes": 3, "telefone": "62981720831"}, {"nome": "Sharlie", "dia": 1, "mes": 3, "telefone": "62985880806"}, {"nome": "Shirley", "dia": 28, "mes": 3, "telefone": "62982033280"}, {"nome": "Shirley", "dia": 31, "mes": 3, "telefone": "62996376601"}, {"nome": "Shirley", "dia": 3, "mes": 3, "telefone": "62999555013"}, {"nome": "Silma", "dia": 23, "mes": 3, "telefone": "6592792020"}, {"nome": "Silma", "dia": 10, "mes": 3, "telefone": "62991431613"}, {"nome": "Silmeni", "dia": 19, "mes": 3, "telefone": "64992831947"}, {"nome": "Silvana", "dia": 16, "mes": 3, "telefone": "62992090494"}, {"nome": "Silvana", "dia": 3, "mes": 3, "telefone": "62981219084"}, {"nome": "Silvana", "dia": 19, "mes": 3, "telefone": "62992048755"}, {"nome": "Silvania", "dia": 17, "mes": 3, "telefone": "62999827782"}, {"nome": "Silvia", "dia": 9, "mes": 3, "telefone": "62998572883"}, {"nome": "Simone", "dia": 14, "mes": 3, "telefone": "6499548705"}, {"nome": "Simone", "dia": 5, "mes": 3, "telefone": "62985114040"}, {"nome": "Simone", "dia": 2, "mes": 3, "telefone": "62981584079"}, {"nome": "Simone", "dia": 4, "mes": 3, "telefone": "62996171062"}, {"nome": "Simone", "dia": 7, "mes": 3, "telefone": "62996860343"}, {"nome": "Simone", "dia": 28, "mes": 3, "telefone": "64984187873"}, {"nome": "Simone", "dia": 30, "mes": 3, "telefone": "62999725549"}, {"nome": "Simone", "dia": 6, "mes": 3, "telefone": "64999888628"}, {"nome": "Simonia", "dia": 1, "mes": 3, "telefone": "62984078860"}, {"nome": "Sirley", "dia": 1, "mes": 3, "telefone": "64992085669"}, {"nome": "Sofia", "dia": 13, "mes": 3, "telefone": "62981425613"}, {"nome": "Sofia", "dia": 28, "mes": 3, "telefone": "62995037757"}, {"nome": "Sonia", "dia": 9, "mes": 3, "telefone": "62981318276"}, {"nome": "Sonia", "dia": 8, "mes": 3, "telefone": "62999758515"}, {"nome": "Sonia", "dia": 27, "mes": 3, "telefone": "62999710348"}, {"nome": "Sonia", "dia": 4, "mes": 3, "telefone": "62999724557"}, {"nome": "Stefani", "dia": 24, "mes": 3, "telefone": "62981288438"}, {"nome": "Stefany", "dia": 31, "mes": 3, "telefone": "62981988811"}, {"nome": "Stela", "dia": 9, "mes": 3, "telefone": "66999883029"}, {"nome": "Sueli", "dia": 25, "mes": 3, "telefone": "62999092021"}, {"nome": "Suelma", "dia": 20, "mes": 3, "telefone": "62992430751"}, {"nome": "Suenya", "dia": 10, "mes": 3, "telefone": "62996673826"}, {"nome": "Sulamita", "dia": 5, "mes": 3, "telefone": "62996310508"}, {"nome": "Susana", "dia": 1, "mes": 3, "telefone": "62982089230"}, {"nome": "Suzana", "dia": 11, "mes": 3, "telefone": "62992952832"}, {"nome": "Suzana", "dia": 1, "mes": 3, "telefone": "64981155063"}, {"nome": "Sylma", "dia": 14, "mes": 3, "telefone": "64999801318"}, {"nome": "Tais", "dia": 23, "mes": 3, "telefone": "62981159616"}, {"nome": "Talita", "dia": 5, "mes": 3, "telefone": "62982559695"}, {"nome": "Talita", "dia": 5, "mes": 3, "telefone": "62981343803"}, {"nome": "Talita", "dia": 17, "mes": 3, "telefone": "62992254911"}, {"nome": "Tallita", "dia": 2, "mes": 3, "telefone": "62984892640"}, {"nome": "Talyta", "dia": 12, "mes": 3, "telefone": "34993421817"}, {"nome": "Tania", "dia": 4, "mes": 3, "telefone": "62985842758"}, {"nome": "Tarciana", "dia": 25, "mes": 3, "telefone": "62999802405"}, {"nome": "Tataina", "dia": 29, "mes": 3, "telefone": "61981596664"}, {"nome": "Tatiana", "dia": 1, "mes": 3, "telefone": "62981550699"}, {"nome": "Tatiane", "dia": 29, "mes": 3, "telefone": "62981112982"}, {"nome": "Tatiane", "dia": 24, "mes": 3, "telefone": "62984194307"}, {"nome": "Tatiane", "dia": 30, "mes": 3, "telefone": "62996363555"}, {"nome": "Tatyanna", "dia": 14, "mes": 3, "telefone": "62981584102"}, {"nome": "Telma", "dia": 17, "mes": 3, "telefone": "62981252025"}, {"nome": "Tercia", "dia": 9, "mes": 3, "telefone": "35999848582"}, {"nome": "Tereza", "dia": 10, "mes": 3, "telefone": "62981938300"}, {"nome": "Terezinha", "dia": 10, "mes": 3, "telefone": "62992933183"}, {"nome": "Terrezinha", "dia": 28, "mes": 3, "telefone": "62992380806"}, {"nome": "Thainara", "dia": 21, "mes": 3, "telefone": "62992736882"}, {"nome": "Thais", "dia": 10, "mes": 3, "telefone": "62992647706"}, {"nome": "Thais", "dia": 24, "mes": 3, "telefone": "62992415596"}, {"nome": "Thais", "dia": 20, "mes": 3, "telefone": "62992941860"}, {"nome": "Thais", "dia": 10, "mes": 3, "telefone": "62981118224"}, {"nome": "Thaissa", "dia": 4, "mes": 3, "telefone": "62981215189"}, {"nome": "Thalita", "dia": 4, "mes": 3, "telefone": "64984611711"}, {"nome": "Thalita", "dia": 3, "mes": 3, "telefone": "62982238281"}, {"nome": "Thalita", "dia": 18, "mes": 3, "telefone": "62981148055"}, {"nome": "Tharcyana", "dia": 6, "mes": 3, "telefone": "62992652857"}, {"nome": "Thatiane", "dia": 16, "mes": 3, "telefone": "62991260691"}, {"nome": "Thauanny", "dia": 25, "mes": 3, "telefone": "62999172503"}, {"nome": "Thaynara", "dia": 14, "mes": 3, "telefone": "71992139787"}, {"nome": "Theila", "dia": 1, "mes": 3, "telefone": "62992771005"}, {"nome": "Thizha", "dia": 15, "mes": 3, "telefone": "62996317815"}, {"nome": "Tiorrara", "dia": 28, "mes": 3, "telefone": "62981428298"}, {"nome": "Uly", "dia": 23, "mes": 3, "telefone": "62984774519"}, {"nome": "Ursula", "dia": 1, "mes": 3, "telefone": "62992419339"}, {"nome": "Uyara", "dia": 30, "mes": 3, "telefone": "62981188436"}, {"nome": "Valcemia", "dia": 12, "mes": 3, "telefone": "64996441091"}, {"nome": "Valdenuzia", "dia": 20, "mes": 3, "telefone": "94981038400"}, {"nome": "Valdete", "dia": 4, "mes": 3, "telefone": "64996177443"}, {"nome": "Valdimaria", "dia": 27, "mes": 3, "telefone": "62982107777"}, {"nome": "Valeria", "dia": 27, "mes": 3, "telefone": "62999535055"}, {"nome": "Valeria", "dia": 16, "mes": 3, "telefone": "62981121867"}, {"nome": "Valeria", "dia": 30, "mes": 3, "telefone": "62981115090"}, {"nome": "Valeria", "dia": 8, "mes": 3, "telefone": "62999768816"}, {"nome": "Valeria", "dia": 10, "mes": 3, "telefone": "62984482137"}, {"nome": "Valeria", "dia": 5, "mes": 3, "telefone": "62999944320"}, {"nome": "Valquiria", "dia": 3, "mes": 3, "telefone": "62983377778"}, {"nome": "Valquiria", "dia": 23, "mes": 3, "telefone": "62981632822"}, {"nome": "Vanessa", "dia": 29, "mes": 3, "telefone": "62992187617"}, {"nome": "Vanessa", "dia": 12, "mes": 3, "telefone": "62996143632"}, {"nome": "Vanessa", "dia": 1, "mes": 3, "telefone": "62984117763"}, {"nome": "Vanessa", "dia": 29, "mes": 3, "telefone": "62982278844"}, {"nome": "Vanessa", "dia": 24, "mes": 3, "telefone": "62985937727"}, {"nome": "Vanessa", "dia": 19, "mes": 3, "telefone": "62993119344"}, {"nome": "Vanessa", "dia": 18, "mes": 3, "telefone": "62981693263"}, {"nome": "Vanessa", "dia": 16, "mes": 3, "telefone": "62981258300"}, {"nome": "Vania", "dia": 28, "mes": 3, "telefone": "34999923381"}, {"nome": "Vania", "dia": 30, "mes": 3, "telefone": "62981568779"}, {"nome": "Vania", "dia": 1, "mes": 3, "telefone": "62999830405"}, {"nome": "Vera", "dia": 8, "mes": 3, "telefone": "62999101629"}, {"nome": "Vera", "dia": 25, "mes": 3, "telefone": "62999981288"}, {"nome": "Vera", "dia": 24, "mes": 3, "telefone": "62981740174"}, {"nome": "Vera", "dia": 29, "mes": 3, "telefone": "62999042767"}, {"nome": "Victoria", "dia": 26, "mes": 3, "telefone": "53984536005"}, {"nome": "Vilene", "dia": 29, "mes": 3, "telefone": "62999461488"}, {"nome": "Vilma", "dia": 12, "mes": 3, "telefone": "62991300091"}, {"nome": "Vilma", "dia": 6, "mes": 3, "telefone": "62992626333"}, {"nome": "Vilmeyde", "dia": 11, "mes": 3, "telefone": "62999749391"}, {"nome": "Virginia", "dia": 3, "mes": 3, "telefone": "62992531997"}, {"nome": "Viviane", "dia": 6, "mes": 3, "telefone": "62984257035"}, {"nome": "Viviane", "dia": 30, "mes": 3, "telefone": "62981118543"}, {"nome": "Viviane", "dia": 26, "mes": 3, "telefone": "62982690707"}, {"nome": "Viviane", "dia": 17, "mes": 3, "telefone": "62981140660"}, {"nome": "Viviane", "dia": 26, "mes": 3, "telefone": "62984044310"}, {"nome": "Viviane", "dia": 14, "mes": 3, "telefone": "62999682052"}, {"nome": "Viviane", "dia": 4, "mes": 3, "telefone": "62981809494"}, {"nome": "Walquiria", "dia": 14, "mes": 3, "telefone": "62981153310"}, {"nome": "Wanessa", "dia": 2, "mes": 3, "telefone": "62981047410"}, {"nome": "Wanessa", "dia": 27, "mes": 3, "telefone": "62981272005"}, {"nome": "Wanessa", "dia": 29, "mes": 3, "telefone": "62984234606"}, {"nome": "Wanilda", "dia": 12, "mes": 3, "telefone": "62999953155"}, {"nome": "Widerlla", "dia": 25, "mes": 3, "telefone": "64984526424"}, {"nome": "Willana", "dia": 24, "mes": 3, "telefone": "62994774848"}, {"nome": "Willyane", "dia": 22, "mes": 3, "telefone": "62985744477"}, {"nome": "Wilma", "dia": 24, "mes": 3, "telefone": "62991685151"}, {"nome": "Wilson", "dia": 5, "mes": 3, "telefone": "62996468331"}, {"nome": "Yura", "dia": 29, "mes": 3, "telefone": "62996907073"}, {"nome": "Yuri", "dia": 9, "mes": 3, "telefone": "12014920677"}, {"nome": "Zelma", "dia": 21, "mes": 3, "telefone": "62984086440"}, {"nome": "Zilda", "dia": 9, "mes": 3, "telefone": "62985520260"}, {"nome": "Zita", "dia": 27, "mes": 3, "telefone": "62999644071"}, {"nome": "Zora", "dia": 16, "mes": 3, "telefone": "62999696719"}];
+
+let filtroAtivo = 'hoje';
+
+function getHoje() { const d = new Date(); return { dia: d.getDate(), mes: d.getMonth() + 1 }; }
+
+function addDias(n) {
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  return { dia: d.getDate(), mes: d.getMonth() + 1 };
+}
+
+function filtrar(tipo) {
+  const hoje = getHoje();
+  if (tipo === 'hoje') return CLIENTES.filter(c => c.dia === hoje.dia && c.mes === hoje.mes);
+  if (tipo === 'amanha') { const a = addDias(1); return CLIENTES.filter(c => c.dia === a.dia && c.mes === a.mes); }
+  if (tipo === '2dias') { const d = addDias(2); return CLIENTES.filter(c => c.dia === d.dia && c.mes === d.mes); }
+  if (tipo === 'mes') return CLIENTES.filter(c => c.mes === hoje.mes);
+  return [];
+}
+
+function setFiltro(tipo) {
+  filtroAtivo = tipo;
+  document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('ativo'));
+  event.target.classList.add('ativo');
+  renderLista();
+}
+
+function getMensagem(nome) {
+  const msg = document.getElementById('mensagemInput').value;
+  return msg.replace(/\{nome\}/g, nome);
+}
+
+function formatTel(tel) {
+  const d = tel.replace(/\D/g, '');
+  if (d.length === 11) return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
+  if (d.length === 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
+  return d;
+}
+
+function wppLink(tel, nome) {
+  const msg = encodeURIComponent(getMensagem(nome));
+  return `https://wa.me/55${tel}?text=${msg}`;
+}
+
+function isHoje(c) {
+  const h = getHoje();
+  return c.dia === h.dia && c.mes === h.mes;
+}
+
+function renderLista() {
+  const clientes = filtrar(filtroAtivo);
+  const lista = document.getElementById('lista');
+  const badge = document.getElementById('contadorBadge');
+  const btnTodos = document.getElementById('btnEnviarTodos');
+
+  badge.textContent = `${clientes.length} cliente${clientes.length !== 1 ? 's' : ''}`;
+
+  if (clientes.length === 0) {
+    lista.innerHTML = `<div class="empty"><div class="empty-icon">🎂</div><div class="empty-title">Nenhuma aniversariante</div><div class="empty-sub">Nenhuma cliente encontrada para este filtro.</div></div>`;
+    btnTodos.classList.add('hidden');
+    return;
+  }
+
+  btnTodos.classList.remove('hidden');
+
+  lista.innerHTML = clientes.map(c => {
+    const letra = c.nome.charAt(0).toUpperCase();
+    const data = `${String(c.dia).padStart(2,'0')}/${String(c.mes).padStart(2,'0')}`;
+    const hoje = isHoje(c);
+    return `
+      <div class="card">
+        <div class="avatar">${letra}</div>
+        <div class="card-info">
+          <div class="card-nome">${c.nome} ${hoje ? '<span class="tag-hoje">🎉 Hoje!</span>' : ''}</div>
+          <div class="card-detalhes">
+            <span class="card-data">📅 ${data}</span>
+            <span class="card-tel">${formatTel(c.telefone)}</span>
+          </div>
+        </div>
+        <a class="wpp-btn" href="${wppLink(c.telefone, c.nome)}" target="_blank" rel="noopener">📲</a>
+      </div>
+    `;
+  }).join('');
+}
+
+function enviarTodos() {
+  const clientes = filtrar(filtroAtivo);
+  let i = 0;
+  function abrirProximo() {
+    if (i >= clientes.length) return;
+    window.open(wppLink(clientes[i].telefone, clientes[i].nome), '_blank');
+    i++;
+    if (i < clientes.length) setTimeout(abrirProximo, 1200);
+  }
+  abrirProximo();
+}
+
+// Data no header
+const hoje = getHoje();
+const meses = ['','Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+document.getElementById('dataHoje').textContent = `${hoje.dia} de ${meses[hoje.mes]}`;
+
+// Atualiza links ao editar a mensagem
+document.getElementById('mensagemInput').addEventListener('input', renderLista);
+
+renderLista();
+</script>
+</body>
+</html>
